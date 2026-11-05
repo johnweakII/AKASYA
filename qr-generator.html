@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Premium QR Generator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            background: #f4f1eb;
+            font-family: Arial, sans-serif;
+            color: #191714;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px #00000010;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 27px;
+        }
+
+        p {
+            color: #777;
+            line-height: 1.6;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 20px 0 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #171614;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #a77b45;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        #qr-output {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        #qr-output canvas,
+        #qr-output img {
+            max-width: 100%;
+            height: auto !important;
+        }
+
+        .note {
+            background: #f7f5f1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Premium QR Generator</h1>
+
+        <p>
+            Generate a professional QR code
+            with your business logo in the center.
+        </p>
+
+        <label>Menu Website URL</label>
+
+        <input
+            type="url"
+            id="website-url"
+            placeholder="https://yourwebsite.com"
+        >
+
+        <label>Upload Business Logo</label>
+
+        <input
+            type="file"
+            id="logo-upload"
+            accept="image/png,image/jpeg,image/webp"
+        >
+
+        <button id="generate-btn">
+            GENERATE QR CODE
+        </button>
+
+        <div id="qr-output"></div>
+
+        <button id="download-btn" disabled>
+            DOWNLOAD HIGH-QUALITY QR PNG
+        </button>
+
+        <div class="note">
+            Use your published website URL.
+            Localhost URLs will not work for customers
+            scanning from other devices.
+        </div>
+
+    </div>
+
+
+    <!-- QR CODE LIBRARY -->
+
+    <script src="https://unpkg.com/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script>
+
+
+    <script>
+
+        const generateBtn =
+            document.getElementById("generate-btn");
+
+        const downloadBtn =
+            document.getElementById("download-btn");
+
+        const output =
+            document.getElementById("qr-output");
+
+        let qrCode = null;
+
+
+        generateBtn.addEventListener("click", async () => {
+
+            const websiteURL =
+                document.getElementById("website-url").value.trim();
+
+            const logoFile =
+                document.getElementById("logo-upload").files[0];
+
+            if (!websiteURL) {
+                alert("Please enter your menu website URL.");
+                return;
+            }
+
+            try {
+                const parsedURL = new URL(websiteURL);
+
+                if (!["http:", "https:"].includes(parsedURL.protocol)) {
+                    throw new Error("Invalid URL");
+                }
+
+            } catch {
+                alert("Please enter a valid website URL.");
+                return;
+            }
+
+            let logoData = undefined;
+
+            if (logoFile) {
+
+                logoData = await new Promise((resolve, reject) => {
+
+                    const reader = new FileReader();
+
+                    reader.onload = () => resolve(reader.result);
+
+                    reader.onerror = reject;
+
+                    reader.readAsDataURL(logoFile);
+
+                });
+
+            }
+
+            qrCode = new QRCodeStyling({
+
+                width: 1600,
+                height: 1600,
+
+                type: "canvas",
+
+                data: websiteURL,
+
+                margin: 50,
+
+                qrOptions: {
+                    errorCorrectionLevel: "H"
+                },
+
+                image: logoData,
+
+                imageOptions: {
+                    hideBackgroundDots: true,
+                    imageSize: 0.20,
+                    margin: 12
+                },
+
+                dotsOptions: {
+                    color: "#111111",
+                    type: "square"
+                },
+
+                cornersSquareOptions: {
+                    color: "#111111",
+                    type: "square"
+                },
+
+                cornersDotOptions: {
+                    color: "#111111",
+                    type: "square"
+                },
+
+                backgroundOptions: {
+                    color: "#ffffff"
+                }
+
+            });
+
+            output.innerHTML = "";
+
+            qrCode.append(output);
+
+            downloadBtn.disabled = false;
+
+        });
+
+
+        downloadBtn.addEventListener("click", () => {
+
+            if (qrCode) {
+
+                qrCode.download({
+                    name: "Business-Menu-QR",
+                    extension: "png"
+                });
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

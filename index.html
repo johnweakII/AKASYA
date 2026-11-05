@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Product Menu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <img src="assets/logo.jpg" alt="Business Logo" class="logo">
+
+        <div>
+            <h1 id="business-name">AKASYA cafe</h1>
+            <p>Explore Our Products</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="intro">
+            <span>OUR COLLECTION</span>
+            <h2>Product Gallery</h2>
+            <p>Discover our available products below.</p>
+        </section>
+
+        <nav id="categories" class="categories"></nav>
+
+        <section id="gallery" class="gallery"></section>
+
+        <footer>
+            <p>Thank you for visiting our menu!</p>
+        </footer>
+
+    </main>
+
+    <!-- Product image popup -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button id="close-modal" class="close">&times;</button>
+            <img id="modal-image" src="" alt="">
+            <div class="modal-info">
+                <span id="modal-category"></span>
+                <h2 id="modal-name"></h2>
+                <p id="modal-description"></p>
+                <h3 id="modal-price"></h3>
+            </div>
+        </div>
+    </div>
+
+    <script src="menu.js"></script>
+    <script src="gallery.js"></script>
+
+</body>
+</html>
